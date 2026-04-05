@@ -17,12 +17,12 @@ let currentImageUrls = [];
 let currentImageIndex = 0;
 
 // ==================== Infinite Scroll Variables (محسنة) ====================
-let allPostsCache = [];           // تخزين مؤقت لكل المنشورات
-let currentDisplayCount = 0;      // عدد المنشورات المعروضة حالياً
-let isLoadingMore = false;         // لمنع التحميل المتكرر
-let hasMorePosts = true;           // هل يوجد المزيد؟
-let scrollListenerActive = true;   // حالة مستمع التمرير
-const POSTS_PER_BATCH = 5;         // 5 منشورات فقط في كل مرة (سلس جداً)
+let allPostsCache = [];
+let currentDisplayCount = 0;
+let isLoadingMore = false;
+let hasMorePosts = true;
+let scrollListenerActive = true;
+const POSTS_PER_BATCH = 5;
 
 // ==================== Upload Progress Variables ====================
 let currentUploadProgress = 0;
@@ -1088,9 +1088,7 @@ async function loadTrendingHashtags() {
     }
 }
 
-// ==================== Infinite Scroll - محسن وسلس جداً ====================
-
-// تحميل كل المنشورات إلى الكاش (مرة واحدة فقط)
+// ==================== Infinite Scroll ====================
 async function loadAllPostsToCache() {
     const feedContainer = document.getElementById('feedContainer');
     if (!feedContainer) return;
@@ -1139,7 +1137,6 @@ async function loadAllPostsToCache() {
     }
 }
 
-// عرض الدفعة الأولى فقط
 async function displayPosts(startIndex, count) {
     const feedContainer = document.getElementById('feedContainer');
     if (!feedContainer) return;
@@ -1262,7 +1259,6 @@ async function displayPosts(startIndex, count) {
         feedContainer.insertAdjacentHTML('beforeend', postHtml);
     }
     
-    // إضافة مؤشر التحميل عند الحاجة
     if (hasMorePosts && endIndex < allPostsCache.length) {
         let loadMoreDiv = document.getElementById('loadMoreTrigger');
         if (!loadMoreDiv) {
@@ -1283,7 +1279,6 @@ async function displayPosts(startIndex, count) {
     }
 }
 
-// تحميل المزيد من المنشورات - سلس جداً
 async function loadMorePosts() {
     if (isLoadingMore || !hasMorePosts) return;
     
@@ -1291,7 +1286,6 @@ async function loadMorePosts() {
     const loadMoreDiv = document.getElementById('loadMoreTrigger');
     if (loadMoreDiv) loadMoreDiv.style.display = 'flex';
     
-    // تأخير بسيط لتجربة سلسة
     await new Promise(resolve => setTimeout(resolve, 200));
     
     const startIndex = currentDisplayCount;
@@ -1309,13 +1303,12 @@ async function loadMorePosts() {
     isLoadingMore = false;
 }
 
-// مستمع التمرير المحسن - للأداء العالي
 function setupSmoothScrollListener() {
     const handleScroll = () => {
         if (isLoadingMore || !hasMorePosts) return;
         
         const scrollPosition = window.innerHeight + window.scrollY;
-        const threshold = document.body.offsetHeight - 500; // 500px قبل النهاية
+        const threshold = document.body.offsetHeight - 500;
         
         if (scrollPosition >= threshold) {
             loadMorePosts();
@@ -1326,7 +1319,6 @@ function setupSmoothScrollListener() {
     window.addEventListener('scroll', handleScroll, { passive: true });
 }
 
-// تحديث الكاش بعد إضافة/حذف منشور
 async function refreshFeedCache() {
     if (!currentUser) return;
     
@@ -1611,19 +1603,51 @@ function closeEditProfileModal() {
     document.getElementById('editProfileModal').classList.remove('open');
 }
 
+// ==================== تعديل الملف الشخصي - النسخة المعدلة (تم إصلاحها) ====================
 async function saveProfileEdit() {
     const newName = document.getElementById('editName')?.value;
     const newBio = document.getElementById('editBio')?.value;
     const newWebsite = document.getElementById('editWebsite')?.value;
-    if (newName && newName.trim()) await currentUser.updateProfile({ displayName: newName.trim() });
-    await db.ref(`users/${currentUser.uid}`).update({ name: newName || currentUser.name, bio: newBio || "", website: newWebsite || "" });
-    currentUser.name = newName || currentUser.name;
-    currentUser.bio = newBio || "";
-    currentUser.website = newWebsite || "";
-    currentUser.displayName = newName || currentUser.displayName;
-    closeEditProfileModal();
-    openProfile(currentUser.uid);
-    showToast('💾 تم حفظ التغييرات');
+    
+    try {
+        showToast('🔄 جاري حفظ التغييرات...');
+        
+        // 1. تحديث الاسم في Firebase Authentication
+        if (newName && newName.trim() && newName.trim() !== currentUser.displayName) {
+            await currentUser.updateProfile({ displayName: newName.trim() });
+            currentUser.displayName = newName.trim();
+        }
+        
+        // 2. تحديث البيانات في Realtime Database
+        const updates = {};
+        if (newName && newName.trim()) updates.name = newName.trim();
+        if (newBio !== undefined) updates.bio = newBio || "";
+        if (newWebsite !== undefined) updates.website = newWebsite || "";
+        
+        await db.ref(`users/${currentUser.uid}`).update(updates);
+        
+        // 3. تحديث المتغير currentUser محلياً
+        if (newName && newName.trim()) currentUser.name = newName.trim();
+        if (newBio !== undefined) currentUser.bio = newBio || "";
+        if (newWebsite !== undefined) currentUser.website = newWebsite || "";
+        
+        // 4. إغلاق نافذة التعديل
+        closeEditProfileModal();
+        
+        // 5. تحديث واجهة الملف الشخصي إذا كانت مفتوحة
+        if (currentProfileUser === currentUser.uid) {
+            await openProfile(currentUser.uid);
+        }
+        
+        // 6. تحديث المنشورات في التغذية (لأن اسم المستخدم تغير)
+        refreshFeedCache();
+        
+        showToast('✅ تم حفظ التغييرات بنجاح');
+        
+    } catch (error) {
+        console.error('Save profile error:', error);
+        showToast('❌ حدث خطأ أثناء حفظ التغييرات: ' + error.message);
+    }
 }
 
 // ==================== Chat ====================
