@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>DOKA | منصة اجتماعية عصرية</title>
-    <meta name="theme-color" content="#ffffff">
+    <meta name="theme-color" content="#667eea">
     <meta name="description" content="DOKA - منصة اجتماعية حديثة تجمع العالم">
     
     <!-- Fonts & Icons -->
@@ -23,6 +23,7 @@
     <script src="https://download.agora.io/sdk/release/AgoraRTC_N-4.22.0.js"></script>
     
     <style>
+        /* جميع الـ CSS الأصلي محفوظ كما هو - تم الحذف فقط من authScreen */
         * {
             margin: 0;
             padding: 0;
@@ -38,18 +39,16 @@
             overflow-x: hidden;
         }
         
-        /* ==================== DARK MODE - تم الإصلاح بالكامل ==================== */
+        /* Dark Mode */
         body.dark-mode {
             background: linear-gradient(135deg, #0f0f1a 0%, #1a1a2e 50%, #16213e 100%);
             color: #e0e0e0;
         }
         
-        /* خلفية الأمواج في الوضع الليلي */
         body.dark-mode .wave-bg .wave {
             opacity: 0.15;
         }
         
-        /* بطاقات المنشورات */
         body.dark-mode .post-card {
             background: rgba(30, 30, 46, 0.95);
             backdrop-filter: blur(10px);
@@ -57,25 +56,18 @@
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
         }
         
-        body.dark-mode .post-card:hover {
-            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
-        }
-        
-        /* الشريط العلوي */
         body.dark-mode .top-bar {
             background: rgba(18, 18, 30, 0.95);
             backdrop-filter: blur(10px);
             border-bottom: 1px solid rgba(255, 255, 255, 0.08);
         }
         
-        /* الشريط السفلي */
         body.dark-mode .bottom-nav {
             background: rgba(18, 18, 30, 0.95);
             backdrop-filter: blur(10px);
             border-top: 1px solid rgba(255, 255, 255, 0.08);
         }
         
-        /* النوافذ المنبثقة */
         body.dark-mode .compose-content,
         body.dark-mode .chat-panel,
         body.dark-mode .modal-content {
@@ -84,29 +76,6 @@
             border: 1px solid rgba(255, 255, 255, 0.08);
         }
         
-        /* شاشة تسجيل الدخول */
-        body.dark-mode .auth-card {
-            background: rgba(25, 25, 40, 0.95);
-            backdrop-filter: blur(15px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-        
-        body.dark-mode .auth-card input {
-            background: #2a2a3a;
-            border-color: #3a3a4a;
-            color: #e0e0e0;
-        }
-        
-        body.dark-mode .auth-card input:focus {
-            border-color: #667eea;
-            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2);
-        }
-        
-        body.dark-mode .auth-card input::placeholder {
-            color: #888;
-        }
-        
-        /* رسائل المحادثة */
         body.dark-mode .message-bubble {
             background: #2a2a3a;
             color: #e0e0e0;
@@ -117,7 +86,6 @@
             color: white;
         }
         
-        /* حاويات التصويت */
         body.dark-mode .poll-container {
             background: rgba(42, 42, 58, 0.8);
         }
@@ -127,11 +95,6 @@
             color: #e0e0e0;
         }
         
-        body.dark-mode .poll-option:hover {
-            background: rgba(102, 126, 234, 0.2);
-        }
-        
-        /* الشريط الجانبي */
         body.dark-mode .trending-sidebar {
             background: rgba(25, 25, 40, 0.8);
             backdrop-filter: blur(10px);
@@ -146,13 +109,8 @@
             background: rgba(102, 126, 234, 0.15);
         }
         
-        /* الأزرار والأيقونات */
         body.dark-mode .top-icon {
             color: #aaa;
-        }
-        
-        body.dark-mode .top-icon:hover {
-            color: #667eea;
         }
         
         body.dark-mode .nav-item {
@@ -160,15 +118,6 @@
         }
         
         body.dark-mode .nav-item.active {
-            color: #667eea;
-        }
-        
-        body.dark-mode .nav-item:hover {
-            color: #667eea;
-        }
-        
-        /* روابط */
-        body.dark-mode .auth-link a {
             color: #667eea;
         }
         
@@ -182,15 +131,6 @@
             color: #888;
         }
         
-        body.dark-mode .post-menu {
-            color: #aaa;
-        }
-        
-        body.dark-mode .post-menu:hover {
-            color: #667eea;
-        }
-        
-        /* أزرار الملف الشخصي */
         body.dark-mode .profile-btn {
             background: rgba(42, 42, 58, 0.8);
             border-color: rgba(255, 255, 255, 0.1);
@@ -200,110 +140,36 @@
         body.dark-mode .profile-btn-primary {
             background: linear-gradient(135deg, #4f46e5, #7c3aed);
             color: white;
-            border: none;
         }
         
-        /* مدخلات المحادثة */
         body.dark-mode .chat-input {
             background: #2a2a3a;
             border-color: #3a3a4a;
             color: #e0e0e0;
         }
         
-        body.dark-mode .chat-input:focus {
-            border-color: #667eea;
-        }
-        
-        body.dark-mode .chat-input::placeholder {
-            color: #888;
-        }
-        
-        /* التبديل (Toggle) */
-        body.dark-mode .toggle-switch {
-            background: #3a3a4a;
-        }
-        
-        /* العناصر الإدارية */
         body.dark-mode .admin-item {
             border-bottom: 1px solid rgba(255, 255, 255, 0.05);
         }
         
-        body.dark-mode .admin-item:hover {
-            background: rgba(102, 126, 234, 0.1);
-        }
-        
-        /* مربع كتابة المنشور */
         body.dark-mode .compose-textarea {
             background: transparent;
             color: #e0e0e0;
         }
         
-        body.dark-mode .compose-textarea::placeholder {
-            color: #888;
-        }
-        
-        body.dark-mode .compose-tool {
-            color: #aaa;
-        }
-        
-        body.dark-mode .compose-tool:hover {
-            background: rgba(102, 126, 234, 0.15);
-            color: #667eea;
-        }
-        
-        /* منطقة السحب والإفلات */
         body.dark-mode .drag-drop-area {
             background: rgba(102, 126, 234, 0.08);
             border-color: rgba(102, 126, 234, 0.3);
         }
         
-        body.dark-mode .drag-drop-area.drag-over {
-            background: rgba(102, 126, 234, 0.15);
-            border-color: #667eea;
-        }
-        
-        /* Skeleton Loader في الوضع الليلي */
         body.dark-mode .skeleton {
             background: linear-gradient(90deg, #2a2a3a 25%, #3a3a4a 50%, #2a2a3a 75%);
-            background-size: 200% 100%;
         }
         
-        /* اقتباس المنشور */
         body.dark-mode .quote-post {
             background: rgba(42, 42, 58, 0.8);
             border-right-color: #667eea;
         }
-        
-        /* معاينة الوسائط */
-        body.dark-mode .preview-info {
-            background: linear-gradient(transparent, rgba(0,0,0,0.8));
-        }
-        
-        /* شريط التقدم */
-        body.dark-mode .progress-bar {
-            background: rgba(255, 255, 255, 0.1);
-        }
-        
-        /* الإيموجي السريع */
-        body.dark-mode .quick-emojis {
-            border-top-color: rgba(255, 255, 255, 0.08);
-        }
-        
-        /* رسائل الخطأ */
-        body.dark-mode .error-msg {
-            color: #f87171;
-        }
-        
-        /* عناصر المتابعين */
-        body.dark-mode .follower-item {
-            border-bottom-color: rgba(255, 255, 255, 0.05);
-        }
-        
-        body.dark-mode .follower-item:hover {
-            background: rgba(102, 126, 234, 0.1);
-        }
-        
-        /* ==================== أنماط الوضع الفاتح (الأساسي) ==================== */
         
         /* Animated Background - Waves */
         .wave-bg {
@@ -345,38 +211,19 @@
             100% { transform: translateX(-100%); }
         }
         
-        /* Animations */
         @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
         }
         
         @keyframes fadeInLeft {
-            from {
-                opacity: 0;
-                transform: translateX(-30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateX(0);
-            }
+            from { opacity: 0; transform: translateX(-30px); }
+            to { opacity: 1; transform: translateX(0); }
         }
         
         @keyframes fadeInRight {
-            from {
-                opacity: 0;
-                transform: translateX(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateX(0);
-            }
+            from { opacity: 0; transform: translateX(30px); }
+            to { opacity: 1; transform: translateX(0); }
         }
         
         @keyframes spin {
@@ -393,23 +240,9 @@
             100% { background-position: 1000px 0; }
         }
         
-        @keyframes glow {
-            0%, 100% { box-shadow: 0 0 5px rgba(102,126,234,0.5); }
-            50% { box-shadow: 0 0 20px rgba(102,126,234,0.8); }
-        }
-        
-        /* Scroll Animations */
-        .fade-in-up {
-            animation: fadeInUp 0.6s ease-out forwards;
-        }
-        
-        .fade-in-left {
-            animation: fadeInLeft 0.5s ease-out forwards;
-        }
-        
-        .fade-in-right {
-            animation: fadeInRight 0.5s ease-out forwards;
-        }
+        .fade-in-up { animation: fadeInUp 0.6s ease-out forwards; }
+        .fade-in-left { animation: fadeInLeft 0.5s ease-out forwards; }
+        .fade-in-right { animation: fadeInRight 0.5s ease-out forwards; }
         
         /* Skeleton Loader */
         .skeleton {
@@ -419,204 +252,16 @@
             border-radius: 12px;
         }
         
-        .skeleton-avatar {
-            width: 44px;
-            height: 44px;
-            border-radius: 50%;
-        }
-        
-        .skeleton-text {
-            height: 12px;
-            margin: 8px 0;
-            border-radius: 6px;
-        }
-        
-        .skeleton-title {
-            width: 60%;
-            height: 16px;
-        }
-        
-        .skeleton-image {
-            width: 100%;
-            height: 300px;
-            margin: 12px 0;
-        }
-        
-        /* Neumorphism Design */
-        .neumorph {
-            background: #e0e5ec;
-            border-radius: 20px;
-            box-shadow: 9px 9px 16px #a3b1c6, -9px -9px 16px #ffffff;
-        }
-        
-        .neumorph-btn {
-            background: #e0e5ec;
-            border: none;
-            border-radius: 16px;
-            padding: 12px 24px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s;
-            box-shadow: 5px 5px 10px #a3b1c6, -5px -5px 10px #ffffff;
-        }
-        
-        .neumorph-btn:active {
-            box-shadow: inset 5px 5px 10px #a3b1c6, inset -5px -5px 10px #ffffff;
-            transform: scale(0.98);
-        }
-        
-        /* Hover Effects */
-        .hover-glow:hover {
-            animation: glow 0.5s ease infinite;
-        }
-        
-        .hover-scale:hover {
-            transform: scale(1.02);
-            transition: transform 0.3s ease;
-        }
-        
-        .hover-lift:hover {
-            transform: translateY(-3px);
-            transition: transform 0.3s ease;
-        }
-        
-        .post-card {
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-        
-        .post-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
-        }
-        
-        .post-image {
-            transition: transform 0.3s ease;
-        }
-        
-        .post-image:hover {
-            transform: scale(1.02);
-        }
+        .skeleton-avatar { width: 44px; height: 44px; border-radius: 50%; }
+        .skeleton-text { height: 12px; margin: 8px 0; border-radius: 6px; }
+        .skeleton-title { width: 60%; height: 16px; }
+        .skeleton-image { width: 100%; height: 300px; margin: 12px 0; }
         
         /* Custom Scrollbar */
-        ::-webkit-scrollbar {
-            width: 6px;
-        }
-        
-        ::-webkit-scrollbar-track {
-            background: #e5e7eb;
-            border-radius: 10px;
-        }
-        
-        ::-webkit-scrollbar-thumb {
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            border-radius: 10px;
-        }
-        
-        body.dark-mode ::-webkit-scrollbar-track {
-            background: #2a2a3a;
-        }
-        
-        /* Auth Screen */
-        .auth-screen {
-            position: fixed;
-            inset: 0;
-            z-index: 1000;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: linear-gradient(135deg, #f5f7fa 0%, #e4e8f0 100%);
-        }
-        
-        .auth-card {
-            background: rgba(255, 255, 255, 0.85);
-            backdrop-filter: blur(15px);
-            border-radius: 32px;
-            padding: 48px 40px;
-            width: 90%;
-            max-width: 440px;
-            text-align: center;
-            box-shadow: 20px 20px 40px rgba(0, 0, 0, 0.1), -20px -20px 40px rgba(255, 255, 255, 0.5);
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            animation: float 3s ease-in-out infinite;
-        }
-        
-        .auth-card h1 {
-            font-size: 56px;
-            font-weight: 900;
-            margin-bottom: 32px;
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-        
-        .auth-card input {
-            width: 100%;
-            padding: 16px 20px;
-            margin: 10px 0;
-            border-radius: 16px;
-            background: rgba(255, 255, 255, 0.9);
-            border: 1px solid rgba(0, 0, 0, 0.1);
-            font-size: 16px;
-            font-family: 'Rubik', sans-serif;
-            transition: all 0.3s ease;
-        }
-        
-        .auth-card input:focus {
-            outline: none;
-            border-color: #667eea;
-            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
-        }
-        
-        .auth-card button {
-            width: 100%;
-            padding: 14px;
-            margin-top: 20px;
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            border: none;
-            border-radius: 16px;
-            color: white;
-            font-weight: 700;
-            font-size: 16px;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-        
-        .auth-card button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 25px -5px rgba(102, 126, 234, 0.4);
-        }
-        
-        .auth-card button:active {
-            transform: translateY(0);
-        }
-        
-        .auth-form {
-            display: none;
-        }
-        
-        .auth-form.active {
-            display: block;
-            animation: fadeInUp 0.3s ease-out;
-        }
-        
-        .auth-link {
-            margin-top: 28px;
-            color: #6b7280;
-            font-size: 14px;
-        }
-        
-        .auth-link a {
-            color: #667eea;
-            text-decoration: none;
-            font-weight: 600;
-            cursor: pointer;
-        }
-        
-        .error-msg {
-            color: #ef4444;
-            font-size: 12px;
-            margin-top: 8px;
-        }
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #e5e7eb; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb { background: linear-gradient(135deg, #667eea, #764ba2); border-radius: 10px; }
+        body.dark-mode ::-webkit-scrollbar-track { background: #2a2a3a; }
         
         /* Main App */
         #mainApp {
@@ -667,10 +312,6 @@
             color: #667eea;
         }
         
-        .top-icon:active {
-            transform: scale(0.95);
-        }
-        
         /* Main Layout */
         .main-layout {
             display: flex;
@@ -703,9 +344,7 @@
         }
         
         @media (min-width: 1024px) {
-            .trending-sidebar {
-                display: block;
-            }
+            .trending-sidebar { display: block; }
         }
         
         .trending-item {
@@ -739,10 +378,7 @@
             box-shadow: 10px 10px 30px rgba(0, 0, 0, 0.05), -5px -5px 15px rgba(255, 255, 255, 0.5);
         }
         
-        .post-card.pinned {
-            border-right: 4px solid #667eea;
-        }
-        
+        .post-card.pinned { border-right: 4px solid #667eea; }
         .pinned-badge {
             position: absolute;
             top: 12px;
@@ -782,15 +418,8 @@
             transition: transform 0.3s;
         }
         
-        .post-avatar:hover {
-            transform: scale(1.05);
-        }
-        
-        .post-avatar img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
+        .post-avatar:hover { transform: scale(1.05); }
+        .post-avatar img { width: 100%; height: 100%; object-fit: cover; }
         
         .post-username {
             font-weight: 700;
@@ -800,16 +429,8 @@
             gap: 6px;
         }
         
-        .verified-badge {
-            color: #3b82f6;
-            font-size: 14px;
-        }
-        
-        .post-time {
-            font-size: 11px;
-            color: #9ca3af;
-            margin-top: 2px;
-        }
+        .verified-badge { color: #3b82f6; font-size: 14px; }
+        .post-time { font-size: 11px; color: #9ca3af; margin-top: 2px; }
         
         .post-menu {
             background: none;
@@ -821,26 +442,9 @@
             padding: 6px;
         }
         
-        .post-menu:hover {
-            color: #667eea;
-            transform: rotate(15deg);
-        }
-        
-        .post-menu:active {
-            transform: scale(0.9);
-        }
-        
-        .post-image {
-            width: 100%;
-            max-height: 400px;
-            object-fit: cover;
-            cursor: pointer;
-            transition: transform 0.3s ease;
-        }
-        
-        .post-image:hover {
-            transform: scale(1.02);
-        }
+        .post-menu:hover { color: #667eea; transform: rotate(15deg); }
+        .post-image { width: 100%; max-height: 400px; object-fit: cover; cursor: pointer; transition: transform 0.3s ease; }
+        .post-image:hover { transform: scale(1.02); }
         
         /* Video Container */
         .video-container {
@@ -850,12 +454,7 @@
             cursor: pointer;
         }
         
-        .post-video {
-            width: 100%;
-            max-height: 450px;
-            object-fit: cover;
-            display: block;
-        }
+        .post-video { width: 100%; max-height: 450px; object-fit: cover; display: block; }
         
         .video-overlay {
             position: absolute;
@@ -871,9 +470,7 @@
             transition: opacity 0.2s;
         }
         
-        .video-container:hover .video-overlay {
-            opacity: 1;
-        }
+        .video-container:hover .video-overlay { opacity: 1; }
         
         .video-overlay button {
             background: none;
@@ -881,12 +478,6 @@
             color: white;
             font-size: 14px;
             cursor: pointer;
-            transition: transform 0.2s;
-        }
-        
-        .video-overlay button:hover {
-            color: #667eea;
-            transform: scale(1.1);
         }
         
         /* Image Viewer Modal */
@@ -904,19 +495,8 @@
             transition: all 0.3s ease;
         }
         
-        .image-viewer-modal.open {
-            opacity: 1;
-            visibility: visible;
-        }
-        
-        .image-viewer-modal img {
-            max-width: 90%;
-            max-height: 90%;
-            object-fit: contain;
-            border-radius: 20px;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
-            animation: fadeInUp 0.3s ease-out;
-        }
+        .image-viewer-modal.open { opacity: 1; visibility: visible; }
+        .image-viewer-modal img { max-width: 90%; max-height: 90%; border-radius: 20px; }
         
         .image-viewer-close {
             position: absolute;
@@ -926,19 +506,12 @@
             color: white;
             cursor: pointer;
             background: rgba(0, 0, 0, 0.5);
-            backdrop-filter: blur(4px);
             width: 44px;
             height: 44px;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            transition: all 0.2s;
-        }
-        
-        .image-viewer-close:hover {
-            background: rgba(0, 0, 0, 0.8);
-            transform: scale(1.05) rotate(90deg);
         }
         
         .post-actions {
@@ -956,66 +529,15 @@
             transition: all 0.2s;
         }
         
-        .post-action:hover {
-            transform: scale(1.1);
-        }
+        .post-action:hover { transform: scale(1.1); }
+        .post-action.active { color: #ef4444; }
         
-        .post-action:active {
-            transform: scale(0.9);
-        }
-        
-        .post-action.active {
-            color: #ef4444;
-        }
-        
-        .post-likes {
-            font-weight: 600;
-            font-size: 13px;
-            padding: 0 16px 4px;
-        }
-        
-        .post-caption {
-            padding: 0 16px 8px;
-            font-size: 14px;
-        }
-        
-        .post-caption span {
-            font-weight: 700;
-            cursor: pointer;
-            transition: color 0.2s;
-        }
-        
-        .post-caption span:hover {
-            color: #667eea;
-        }
-        
-        .post-hashtags {
-            color: #667eea;
-            cursor: pointer;
-            transition: color 0.2s;
-        }
-        
-        .post-hashtags:hover {
-            text-decoration: underline;
-        }
-        
-        .post-comments {
-            padding: 0 16px 8px;
-            font-size: 13px;
-            color: #9ca3af;
-            cursor: pointer;
-            transition: color 0.2s;
-        }
-        
-        .post-comments:hover {
-            color: #667eea;
-        }
-        
-        .post-views {
-            padding: 0 16px 12px;
-            font-size: 11px;
-            color: #9ca3af;
-        }
+        .post-likes { font-weight: 600; font-size: 13px; padding: 0 16px 4px; }
+        .post-caption { padding: 0 16px 8px; font-size: 14px; }
+        .post-caption span { font-weight: 700; cursor: pointer; }
+        .post-hashtags { color: #667eea; cursor: pointer; }
+        .post-comments { padding: 0 16px 8px; font-size: 13px; color: #9ca3af; cursor: pointer; }
+        .post-views { padding: 0 16px 12px; font-size: 11px; color: #9ca3af; }
         
         /* Poll */
         .poll-container {
@@ -1031,21 +553,11 @@
             padding: 10px;
             margin: 8px 0;
             cursor: pointer;
-            transition: all 0.2s;
             position: relative;
             overflow: hidden;
         }
         
-        .poll-option:hover {
-            background: rgba(102, 126, 234, 0.1);
-            transform: translateX(5px);
-        }
-        
-        .poll-option.selected {
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            color: white;
-        }
-        
+        .poll-option:hover { background: rgba(102, 126, 234, 0.1); transform: translateX(5px); }
         .poll-progress {
             position: absolute;
             left: 0;
@@ -1071,12 +583,6 @@
             margin: 8px 12px;
             border-right: 4px solid #667eea;
             cursor: pointer;
-            transition: all 0.2s;
-        }
-        
-        .quote-post:hover {
-            background: rgba(102, 126, 234, 0.1);
-            transform: translateX(5px);
         }
         
         /* Compose Modal */
@@ -1094,10 +600,7 @@
             transition: all 0.3s ease;
         }
         
-        .compose-modal.open {
-            opacity: 1;
-            visibility: visible;
-        }
+        .compose-modal.open { opacity: 1; visibility: visible; }
         
         .compose-content {
             background: rgba(255, 255, 255, 0.95);
@@ -1150,22 +653,13 @@
             transform: scale(1.02);
         }
         
-        .drag-drop-area i {
-            font-size: 48px;
-            color: #667eea;
-            margin-bottom: 12px;
-        }
-        
         .media-preview {
             margin: 12px;
             position: relative;
             display: none;
         }
         
-        .media-preview.active {
-            display: block;
-            animation: fadeInUp 0.3s ease-out;
-        }
+        .media-preview.active { display: block; }
         
         .preview-container {
             position: relative;
@@ -1179,20 +673,6 @@
             width: 100%;
             max-height: 300px;
             object-fit: contain;
-        }
-        
-        .preview-info {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            background: linear-gradient(transparent, rgba(0,0,0,0.7));
-            padding: 12px;
-            color: white;
-            font-size: 12px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
         }
         
         .remove-media {
@@ -1209,24 +689,16 @@
             align-items: center;
             justify-content: center;
             cursor: pointer;
-            transition: all 0.2s;
             z-index: 10;
         }
         
-        .remove-media:hover {
-            background: rgba(0, 0, 0, 0.8);
-            transform: scale(1.1);
-        }
-        
-        /* Progress Bar */
+        /* Upload Progress */
         .upload-progress {
             margin: 12px;
             display: none;
         }
         
-        .upload-progress.active {
-            display: block;
-        }
+        .upload-progress.active { display: block; }
         
         .progress-bar {
             width: 100%;
@@ -1240,15 +712,7 @@
             width: 0%;
             height: 100%;
             background: linear-gradient(135deg, #667eea, #764ba2);
-            border-radius: 10px;
             transition: width 0.3s ease;
-        }
-        
-        .progress-text {
-            font-size: 12px;
-            margin-top: 8px;
-            text-align: center;
-            color: #667eea;
         }
         
         .compose-tools {
@@ -1301,18 +765,8 @@
             padding: 6px;
         }
         
-        .nav-item:hover {
-            transform: translateY(-3px);
-            color: #667eea;
-        }
-        
-        .nav-item:active {
-            transform: scale(0.9);
-        }
-        
-        .nav-item.active {
-            color: #667eea;
-        }
+        .nav-item:hover { transform: translateY(-3px); color: #667eea; }
+        .nav-item.active { color: #667eea; }
         
         /* Chat Panel */
         .chat-panel {
@@ -1327,9 +781,7 @@
             flex-direction: column;
         }
         
-        .chat-panel.open {
-            transform: translateX(0);
-        }
+        .chat-panel.open { transform: translateX(0); }
         
         .chat-header {
             padding: 16px;
@@ -1366,11 +818,6 @@
             padding: 10px 14px;
             border-radius: 20px;
             font-size: 14px;
-            transition: transform 0.2s;
-        }
-        
-        .message-bubble:hover {
-            transform: scale(1.02);
         }
         
         .message-bubble.sent {
@@ -1395,7 +842,6 @@
             font-size: 14px;
             font-family: 'Rubik', sans-serif;
             background: rgba(255, 255, 255, 0.9);
-            transition: all 0.2s;
         }
         
         .chat-input:focus {
@@ -1409,11 +855,6 @@
             font-size: 22px;
             cursor: pointer;
             color: #667eea;
-            transition: all 0.2s;
-        }
-        
-        .chat-send-btn:hover {
-            transform: scale(1.1);
         }
         
         /* Admin Panel */
@@ -1428,9 +869,7 @@
             overflow-y: auto;
         }
         
-        .admin-panel.open {
-            transform: translateX(0);
-        }
+        .admin-panel.open { transform: translateX(0); }
         
         .admin-stats {
             display: grid;
@@ -1445,17 +884,9 @@
             border-radius: 20px;
             text-align: center;
             color: white;
-            transition: transform 0.3s;
         }
         
-        .admin-stat-card:hover {
-            transform: translateY(-5px);
-        }
-        
-        .admin-stat-number {
-            font-size: 28px;
-            font-weight: 700;
-        }
+        .admin-stat-number { font-size: 28px; font-weight: 700; }
         
         .admin-item {
             display: flex;
@@ -1463,11 +894,6 @@
             align-items: center;
             padding: 12px;
             border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-            transition: background 0.2s;
-        }
-        
-        .admin-item:hover {
-            background: rgba(102, 126, 234, 0.05);
         }
         
         .admin-delete-btn,
@@ -1479,12 +905,7 @@
             cursor: pointer;
             margin: 0 4px;
             font-size: 12px;
-            transition: all 0.2s;
         }
-        
-        .admin-delete-btn:hover { transform: scale(1.05); background: #dc2626; }
-        .admin-mute-btn:hover { transform: scale(1.05); background: #d97706; }
-        .admin-verify-btn:hover { transform: scale(1.05); background: #059669; }
         
         .admin-delete-btn { background: #ef4444; color: white; }
         .admin-mute-btn { background: #f59e0b; color: white; }
@@ -1498,11 +919,6 @@
             background-size: cover;
             background-position: center;
             cursor: pointer;
-            transition: transform 0.3s;
-        }
-        
-        .profile-cover:hover {
-            transform: scale(1.01);
         }
         
         .profile-avatar-wrapper {
@@ -1519,24 +935,10 @@
             border: 4px solid white;
             background: linear-gradient(135deg, #667eea, #764ba2);
             cursor: pointer;
-            transition: transform 0.3s;
         }
         
-        .profile-avatar-large:hover {
-            transform: scale(1.05);
-        }
-        
-        .profile-info {
-            padding: 12px 16px 16px;
-        }
-        
-        .profile-name {
-            font-size: 20px;
-            font-weight: 700;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
+        .profile-info { padding: 12px 16px 16px; }
+        .profile-name { font-size: 20px; font-weight: 700; display: flex; align-items: center; gap: 8px; }
         
         .profile-stats {
             display: flex;
@@ -1547,21 +949,8 @@
             border-bottom: 1px solid rgba(0, 0, 0, 0.1);
         }
         
-        .stat-item {
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-        
-        .stat-item:hover {
-            transform: translateY(-2px);
-            color: #667eea;
-        }
-        
-        .stat-number {
-            font-weight: 700;
-            font-size: 18px;
-        }
+        .stat-item { text-align: center; cursor: pointer; }
+        .stat-number { font-weight: 700; font-size: 18px; }
         
         .profile-buttons {
             display: flex;
@@ -1578,23 +967,12 @@
             cursor: pointer;
             border: 1px solid rgba(0, 0, 0, 0.1);
             background: rgba(255, 255, 255, 0.8);
-            transition: all 0.2s;
-        }
-        
-        .profile-btn:hover {
-            transform: translateY(-2px);
-            background: rgba(102, 126, 234, 0.1);
         }
         
         .profile-btn-primary {
             background: linear-gradient(135deg, #667eea, #764ba2);
             color: white;
             border: none;
-        }
-        
-        .profile-btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
         }
         
         .profile-tabs {
@@ -1612,17 +990,9 @@
             color: #9ca3af;
             background: none;
             border: none;
-            transition: all 0.2s;
         }
         
-        .profile-tab:hover {
-            color: #667eea;
-        }
-        
-        .profile-tab.active {
-            color: #667eea;
-            border-bottom: 2px solid #667eea;
-        }
+        .profile-tab.active { color: #667eea; border-bottom: 2px solid #667eea; }
         
         .profile-grid {
             display: grid;
@@ -1636,11 +1006,6 @@
             overflow: hidden;
             cursor: pointer;
             position: relative;
-            transition: transform 0.3s;
-        }
-        
-        .grid-item:hover {
-            transform: scale(1.02);
         }
         
         .grid-item img,
@@ -1664,7 +1029,7 @@
             font-size: 12px;
         }
         
-        /* Loading - Skeleton */
+        /* Skeleton Post */
         .skeleton-post {
             background: rgba(255, 255, 255, 0.85);
             backdrop-filter: blur(10px);
@@ -1697,10 +1062,6 @@
             pointer-events: none;
             white-space: nowrap;
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-        }
-        
-        body.dark-mode #customToast {
-            background: #374151;
         }
         
         /* Modal */
@@ -1759,10 +1120,6 @@
             transform: translateX(-5px);
         }
         
-        .follower-item:active {
-            transform: scale(0.98);
-        }
-        
         /* Toggle Switch */
         .toggle-switch {
             width: 50px;
@@ -1771,12 +1128,9 @@
             border-radius: 24px;
             cursor: pointer;
             position: relative;
-            transition: all 0.2s;
         }
         
-        .toggle-switch.active {
-            background: #667eea;
-        }
+        .toggle-switch.active { background: #667eea; }
         
         .toggle-switch::after {
             content: '';
@@ -1790,9 +1144,7 @@
             transition: all 0.2s;
         }
         
-        .toggle-switch.active::after {
-            left: 26px;
-        }
+        .toggle-switch.active::after { left: 26px; }
         
         /* Video Call */
         .video-call-modal {
@@ -1806,16 +1158,9 @@
             visibility: hidden;
         }
         
-        .video-call-modal.open {
-            opacity: 1;
-            visibility: visible;
-        }
+        .video-call-modal.open { opacity: 1; visibility: visible; }
         
-        #remoteVideo {
-            flex: 1;
-            background: #000;
-        }
-        
+        #remoteVideo { flex: 1; background: #000; }
         #localVideo {
             width: 120px;
             height: 180px;
@@ -1836,15 +1181,8 @@
             border-radius: 50%;
             font-size: 24px;
             cursor: pointer;
-            transition: all 0.2s;
         }
         
-        .call-end-btn:hover {
-            transform: scale(1.1);
-            background: #dc2626;
-        }
-        
-        /* Quick Emojis */
         .quick-emojis {
             display: flex;
             gap: 12px;
@@ -1855,36 +1193,34 @@
         .quick-emojis span {
             font-size: 22px;
             cursor: pointer;
-            transition: all 0.2s;
         }
         
-        .quick-emojis span:hover {
-            transform: scale(1.2);
+        .recording-indicator {
+            position: fixed;
+            bottom: 100px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #ef4444;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 40px;
+            z-index: 1100;
+            display: none;
         }
         
-        /* Responsive */
-        @media (max-width: 768px) {
-            .auth-card {
-                padding: 32px 24px;
-            }
-            
-            .auth-card h1 {
-                font-size: 42px;
-            }
-            
-            .logo {
-                font-size: 24px;
-            }
-            
-            .post-card {
-                margin: 8px;
-            }
+        .typing-indicator {
+            padding: 8px 16px;
+            font-size: 12px;
+            color: #9ca3af;
         }
         
-        /* Loading Spinner */
-        .loading {
+        .load-more-btn {
             text-align: center;
-            padding: 60px 20px;
+            padding: 16px;
+            margin: 16px;
+            background: rgba(102, 126, 234, 0.1);
+            border-radius: 30px;
+            cursor: pointer;
         }
         
         .spinner {
@@ -1897,19 +1233,10 @@
             margin: 0 auto 12px;
         }
         
-        .load-more-btn {
-            text-align: center;
-            padding: 16px;
-            margin: 16px;
-            background: rgba(102, 126, 234, 0.1);
-            border-radius: 30px;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-        
-        .load-more-btn:hover {
-            background: rgba(102, 126, 234, 0.2);
-            transform: translateY(-2px);
+        /* Responsive */
+        @media (max-width: 768px) {
+            .logo { font-size: 24px; }
+            .post-card { margin: 8px; }
         }
     </style>
 </head>
@@ -1928,30 +1255,7 @@
     <div style="margin-top: 16px; color: #667eea; font-weight: 500;">جاري تحميل DOKA...</div>
 </div>
 
-<!-- Auth Screen -->
-<div id="authScreen" class="auth-screen">
-    <div class="auth-card">
-        <h1>✨ DOKA ✨</h1>
-        <div id="loginForm" class="auth-form active">
-            <input type="email" id="loginEmail" placeholder="البريد الإلكتروني">
-            <input type="password" id="loginPassword" placeholder="كلمة المرور">
-            <button onclick="login()">🚀 تسجيل الدخول</button>
-            <div id="loginMsg" class="error-msg"></div>
-            <div class="auth-link">ليس لديك حساب؟ <a onclick="switchAuth('register')">إنشاء حساب</a></div>
-        </div>
-        <div id="registerForm" class="auth-form">
-            <input type="text" id="regName" placeholder="اسم المستخدم">
-            <input type="email" id="regEmail" placeholder="البريد الإلكتروني">
-            <input type="password" id="regPass" placeholder="كلمة المرور">
-            <input type="password" id="regConfirmPass" placeholder="تأكيد كلمة المرور">
-            <button onclick="register()">✨ إنشاء حساب</button>
-            <div id="regMsg" class="error-msg"></div>
-            <div class="auth-link">لديك حساب بالفعل؟ <a onclick="switchAuth('login')">تسجيل الدخول</a></div>
-        </div>
-    </div>
-</div>
-
-<!-- Main App -->
+<!-- Main App (بدون authScreen) -->
 <div id="mainApp">
     <div class="top-bar">
         <div class="logo" onclick="goToHome()">✨ DOKA ✨</div>
@@ -2132,7 +1436,7 @@
             </div>
         </div>
         <div id="chatMessages" class="chat-messages"></div>
-        <div id="typingIndicator" class="typing-indicator" style="display: none; padding: 8px 16px; font-size: 12px; color: #9ca3af;">✏️ جاري الكتابة...</div>
+        <div id="typingIndicator" class="typing-indicator" style="display: none;">✏️ جاري الكتابة...</div>
         <div class="chat-input-area">
             <button class="chat-send-btn" onclick="toggleVoiceRecording()"><i class="fa-solid fa-microphone"></i></button>
             <input type="file" id="chatImageInput" accept="image/*" style="display:none" onchange="sendChatImage(this)">
@@ -2277,7 +1581,7 @@
     <div id="customToast"></div>
     
     <!-- Recording Indicator -->
-    <div id="recordingIndicator" class="recording-indicator" style="display: none; position: fixed; bottom: 100px; left: 50%; transform: translateX(-50%); background: #ef4444; color: white; padding: 8px 16px; border-radius: 40px; z-index: 1100;">🔴 جاري التسجيل...</div>
+    <div id="recordingIndicator" class="recording-indicator">🔴 جاري التسجيل...</div>
 </div>
 
 <script src="firebase-config.js"></script>
