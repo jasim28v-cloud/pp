@@ -34,9 +34,276 @@
             background: linear-gradient(135deg, #f5f7fa 0%, #e4e8f0 100%);
             min-height: 100vh;
             color: #1a1a2e;
-            transition: all 0.3s ease;
+            transition: background 0.3s ease, color 0.3s ease;
             overflow-x: hidden;
         }
+        
+        /* ==================== DARK MODE - تم الإصلاح بالكامل ==================== */
+        body.dark-mode {
+            background: linear-gradient(135deg, #0f0f1a 0%, #1a1a2e 50%, #16213e 100%);
+            color: #e0e0e0;
+        }
+        
+        /* خلفية الأمواج في الوضع الليلي */
+        body.dark-mode .wave-bg .wave {
+            opacity: 0.15;
+        }
+        
+        /* بطاقات المنشورات */
+        body.dark-mode .post-card {
+            background: rgba(30, 30, 46, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        }
+        
+        body.dark-mode .post-card:hover {
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
+        }
+        
+        /* الشريط العلوي */
+        body.dark-mode .top-bar {
+            background: rgba(18, 18, 30, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        
+        /* الشريط السفلي */
+        body.dark-mode .bottom-nav {
+            background: rgba(18, 18, 30, 0.95);
+            backdrop-filter: blur(10px);
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        
+        /* النوافذ المنبثقة */
+        body.dark-mode .compose-content,
+        body.dark-mode .chat-panel,
+        body.dark-mode .modal-content {
+            background: #1e1e30;
+            color: #e0e0e0;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        
+        /* شاشة تسجيل الدخول */
+        body.dark-mode .auth-card {
+            background: rgba(25, 25, 40, 0.95);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        body.dark-mode .auth-card input {
+            background: #2a2a3a;
+            border-color: #3a3a4a;
+            color: #e0e0e0;
+        }
+        
+        body.dark-mode .auth-card input:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2);
+        }
+        
+        body.dark-mode .auth-card input::placeholder {
+            color: #888;
+        }
+        
+        /* رسائل المحادثة */
+        body.dark-mode .message-bubble {
+            background: #2a2a3a;
+            color: #e0e0e0;
+        }
+        
+        body.dark-mode .message-bubble.sent {
+            background: linear-gradient(135deg, #4f46e5, #7c3aed);
+            color: white;
+        }
+        
+        /* حاويات التصويت */
+        body.dark-mode .poll-container {
+            background: rgba(42, 42, 58, 0.8);
+        }
+        
+        body.dark-mode .poll-option {
+            background: #2a2a3a;
+            color: #e0e0e0;
+        }
+        
+        body.dark-mode .poll-option:hover {
+            background: rgba(102, 126, 234, 0.2);
+        }
+        
+        /* الشريط الجانبي */
+        body.dark-mode .trending-sidebar {
+            background: rgba(25, 25, 40, 0.8);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        
+        body.dark-mode .trending-item {
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        
+        body.dark-mode .trending-item:hover {
+            background: rgba(102, 126, 234, 0.15);
+        }
+        
+        /* الأزرار والأيقونات */
+        body.dark-mode .top-icon {
+            color: #aaa;
+        }
+        
+        body.dark-mode .top-icon:hover {
+            color: #667eea;
+        }
+        
+        body.dark-mode .nav-item {
+            color: #aaa;
+        }
+        
+        body.dark-mode .nav-item.active {
+            color: #667eea;
+        }
+        
+        body.dark-mode .nav-item:hover {
+            color: #667eea;
+        }
+        
+        /* روابط */
+        body.dark-mode .auth-link a {
+            color: #667eea;
+        }
+        
+        body.dark-mode .post-hashtags {
+            color: #818cf8;
+        }
+        
+        body.dark-mode .post-time,
+        body.dark-mode .post-comments,
+        body.dark-mode .post-views {
+            color: #888;
+        }
+        
+        body.dark-mode .post-menu {
+            color: #aaa;
+        }
+        
+        body.dark-mode .post-menu:hover {
+            color: #667eea;
+        }
+        
+        /* أزرار الملف الشخصي */
+        body.dark-mode .profile-btn {
+            background: rgba(42, 42, 58, 0.8);
+            border-color: rgba(255, 255, 255, 0.1);
+            color: #e0e0e0;
+        }
+        
+        body.dark-mode .profile-btn-primary {
+            background: linear-gradient(135deg, #4f46e5, #7c3aed);
+            color: white;
+            border: none;
+        }
+        
+        /* مدخلات المحادثة */
+        body.dark-mode .chat-input {
+            background: #2a2a3a;
+            border-color: #3a3a4a;
+            color: #e0e0e0;
+        }
+        
+        body.dark-mode .chat-input:focus {
+            border-color: #667eea;
+        }
+        
+        body.dark-mode .chat-input::placeholder {
+            color: #888;
+        }
+        
+        /* التبديل (Toggle) */
+        body.dark-mode .toggle-switch {
+            background: #3a3a4a;
+        }
+        
+        /* العناصر الإدارية */
+        body.dark-mode .admin-item {
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        
+        body.dark-mode .admin-item:hover {
+            background: rgba(102, 126, 234, 0.1);
+        }
+        
+        /* مربع كتابة المنشور */
+        body.dark-mode .compose-textarea {
+            background: transparent;
+            color: #e0e0e0;
+        }
+        
+        body.dark-mode .compose-textarea::placeholder {
+            color: #888;
+        }
+        
+        body.dark-mode .compose-tool {
+            color: #aaa;
+        }
+        
+        body.dark-mode .compose-tool:hover {
+            background: rgba(102, 126, 234, 0.15);
+            color: #667eea;
+        }
+        
+        /* منطقة السحب والإفلات */
+        body.dark-mode .drag-drop-area {
+            background: rgba(102, 126, 234, 0.08);
+            border-color: rgba(102, 126, 234, 0.3);
+        }
+        
+        body.dark-mode .drag-drop-area.drag-over {
+            background: rgba(102, 126, 234, 0.15);
+            border-color: #667eea;
+        }
+        
+        /* Skeleton Loader في الوضع الليلي */
+        body.dark-mode .skeleton {
+            background: linear-gradient(90deg, #2a2a3a 25%, #3a3a4a 50%, #2a2a3a 75%);
+            background-size: 200% 100%;
+        }
+        
+        /* اقتباس المنشور */
+        body.dark-mode .quote-post {
+            background: rgba(42, 42, 58, 0.8);
+            border-right-color: #667eea;
+        }
+        
+        /* معاينة الوسائط */
+        body.dark-mode .preview-info {
+            background: linear-gradient(transparent, rgba(0,0,0,0.8));
+        }
+        
+        /* شريط التقدم */
+        body.dark-mode .progress-bar {
+            background: rgba(255, 255, 255, 0.1);
+        }
+        
+        /* الإيموجي السريع */
+        body.dark-mode .quick-emojis {
+            border-top-color: rgba(255, 255, 255, 0.08);
+        }
+        
+        /* رسائل الخطأ */
+        body.dark-mode .error-msg {
+            color: #f87171;
+        }
+        
+        /* عناصر المتابعين */
+        body.dark-mode .follower-item {
+            border-bottom-color: rgba(255, 255, 255, 0.05);
+        }
+        
+        body.dark-mode .follower-item:hover {
+            background: rgba(102, 126, 234, 0.1);
+        }
+        
+        /* ==================== أنماط الوضع الفاتح (الأساسي) ==================== */
         
         /* Animated Background - Waves */
         .wave-bg {
@@ -76,69 +343,6 @@
         @keyframes wave {
             0% { transform: translateX(0); }
             100% { transform: translateX(-100%); }
-        }
-        
-        /* Dark Mode */
-        body.dark-mode {
-            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
-            color: #f3f4f6;
-        }
-        
-        body.dark-mode .post-card {
-            background: rgba(30, 41, 59, 0.9);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            box-shadow: 20px 20px 60px rgba(0,0,0,0.3), -20px -20px 60px rgba(255,255,255,0.05);
-        }
-        
-        body.dark-mode .top-bar {
-            background: rgba(30, 41, 59, 0.9);
-            backdrop-filter: blur(10px);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-        }
-        
-        body.dark-mode .bottom-nav {
-            background: rgba(30, 41, 59, 0.9);
-            backdrop-filter: blur(10px);
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-        }
-        
-        body.dark-mode .compose-content,
-        body.dark-mode .chat-panel,
-        body.dark-mode .modal-content {
-            background: #1e293b;
-            color: #f3f4f6;
-            box-shadow: 20px 20px 60px rgba(0,0,0,0.3), -20px -20px 60px rgba(255,255,255,0.05);
-        }
-        
-        body.dark-mode .auth-card {
-            background: rgba(30, 41, 59, 0.95);
-            backdrop-filter: blur(15px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            box-shadow: 20px 20px 60px rgba(0,0,0,0.3), -20px -20px 60px rgba(255,255,255,0.05);
-        }
-        
-        body.dark-mode .auth-card input {
-            background: #334155;
-            border-color: #475569;
-            color: #f3f4f6;
-        }
-        
-        body.dark-mode .message-bubble {
-            background: #334155;
-            color: #f3f4f6;
-        }
-        
-        body.dark-mode .poll-container {
-            background: #334155;
-        }
-        
-        body.dark-mode .trending-sidebar {
-            background: rgba(30, 41, 59, 0.8);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            box-shadow: 10px 10px 30px rgba(0,0,0,0.2);
         }
         
         /* Animations */
@@ -189,11 +393,6 @@
             100% { background-position: 1000px 0; }
         }
         
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-        }
-        
         @keyframes glow {
             0%, 100% { box-shadow: 0 0 5px rgba(102,126,234,0.5); }
             50% { box-shadow: 0 0 20px rgba(102,126,234,0.8); }
@@ -218,11 +417,6 @@
             background-size: 200% 100%;
             animation: shimmer 1.5s infinite;
             border-radius: 12px;
-        }
-        
-        body.dark-mode .skeleton {
-            background: linear-gradient(90deg, #2d3748 25%, #4a5568 50%, #2d3748 75%);
-            background-size: 200% 100%;
         }
         
         .skeleton-avatar {
@@ -255,11 +449,6 @@
             box-shadow: 9px 9px 16px #a3b1c6, -9px -9px 16px #ffffff;
         }
         
-        body.dark-mode .neumorph {
-            background: #1e293b;
-            box-shadow: 9px 9px 16px #0f172a, -9px -9px 16px #334155;
-        }
-        
         .neumorph-btn {
             background: #e0e5ec;
             border: none;
@@ -274,12 +463,6 @@
         .neumorph-btn:active {
             box-shadow: inset 5px 5px 10px #a3b1c6, inset -5px -5px 10px #ffffff;
             transform: scale(0.98);
-        }
-        
-        body.dark-mode .neumorph-btn {
-            background: #1e293b;
-            box-shadow: 5px 5px 10px #0f172a, -5px -5px 10px #334155;
-            color: #f3f4f6;
         }
         
         /* Hover Effects */
@@ -329,6 +512,10 @@
             border-radius: 10px;
         }
         
+        body.dark-mode ::-webkit-scrollbar-track {
+            background: #2a2a3a;
+        }
+        
         /* Auth Screen */
         .auth-screen {
             position: fixed;
@@ -338,10 +525,6 @@
             align-items: center;
             justify-content: center;
             background: linear-gradient(135deg, #f5f7fa 0%, #e4e8f0 100%);
-        }
-        
-        body.dark-mode .auth-screen {
-            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
         }
         
         .auth-card {
@@ -488,14 +671,6 @@
             transform: scale(0.95);
         }
         
-        body.dark-mode .top-icon {
-            color: #d1d5db;
-        }
-        
-        body.dark-mode .top-icon:hover {
-            color: #667eea;
-        }
-        
         /* Main Layout */
         .main-layout {
             display: flex;
@@ -533,11 +708,6 @@
             }
         }
         
-        body.dark-mode .trending-sidebar {
-            background: rgba(30, 41, 59, 0.8);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-        
         .trending-item {
             padding: 12px;
             border-bottom: 1px solid rgba(0, 0, 0, 0.05);
@@ -556,7 +726,7 @@
             color: #667eea;
         }
         
-        /* Post Card - Neumorphism */
+        /* Post Card */
         .post-card {
             background: rgba(255, 255, 255, 0.85);
             backdrop-filter: blur(10px);
@@ -567,11 +737,6 @@
             border-radius: 24px;
             overflow: hidden;
             box-shadow: 10px 10px 30px rgba(0, 0, 0, 0.05), -5px -5px 15px rgba(255, 255, 255, 0.5);
-        }
-        
-        .post-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 15px 15px 40px rgba(0, 0, 0, 0.1), -5px -5px 20px rgba(255, 255, 255, 0.6);
         }
         
         .post-card.pinned {
@@ -1799,9 +1964,7 @@
     </div>
     
     <div class="main-layout">
-        <div id="feedContainer" class="feed-container">
-            <!-- Skeleton Loader سيتم عرضه مؤقتاً -->
-        </div>
+        <div id="feedContainer" class="feed-container"></div>
         <div class="trending-sidebar" id="trendingSidebar">
             <div style="font-weight: 700; margin-bottom: 16px; font-size: 18px;">🔥 الترند</div>
             <div id="trendingList"></div>
