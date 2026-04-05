@@ -16,23 +16,23 @@ let hideLikesActive = false;
 let currentImageUrls = [];
 let currentImageIndex = 0;
 
+// ==================== Infinite Scroll Variables (محسنة) ====================
+let allPostsCache = [];           // تخزين مؤقت لكل المنشورات
+let currentDisplayCount = 0;      // عدد المنشورات المعروضة حالياً
+let isLoadingMore = false;         // لمنع التحميل المتكرر
+let hasMorePosts = true;           // هل يوجد المزيد؟
+let scrollListenerActive = true;   // حالة مستمع التمرير
+const POSTS_PER_BATCH = 5;         // 5 منشورات فقط في كل مرة (سلس جداً)
+
 // ==================== Upload Progress Variables ====================
 let currentUploadProgress = 0;
-
-// ==================== Infinite Scroll Variables ====================
-let allPostsCache = [];
-let currentDisplayCount = 0;
-let isLoadingPosts = false;
-let hasMorePosts = true;
-const POSTS_PER_PAGE = 8;
-let scrollListenerAdded = false;
 
 // ==================== Agora Variables ====================
 let agoraClient = null;
 let localTracks = { videoTrack: null, audioTrack: null };
 let isCallActive = false;
 
-// ==================== Bad Words (يضيفها المدير فقط) ====================
+// ==================== Bad Words ====================
 let badWordsList = [];
 
 // ==================== Helper Functions ====================
@@ -111,14 +111,13 @@ function filterBadWords(text) {
     return filtered;
 }
 
-// ==================== Upload to Cloudinary with Progress ====================
+// ==================== Upload to Cloudinary ====================
 async function uploadToCloudinary(file) {
     const url = `https://api.cloudinary.com/v1_1/${CLOUD_NAME}/upload`;
     const formData = new FormData();
     formData.append('file', file);
     formData.append('upload_preset', UPLOAD_PRESET);
     
-    // Show progress bar
     const progressDiv = document.getElementById('uploadProgress');
     const progressFill = document.getElementById('progressFill');
     const progressText = document.getElementById('progressText');
@@ -127,7 +126,6 @@ async function uploadToCloudinary(file) {
     progressText.textContent = '0%';
     
     try {
-        // Simulate progress for better UX
         let progress = 0;
         const interval = setInterval(() => {
             if (progress < 90) {
@@ -158,7 +156,7 @@ async function uploadToCloudinary(file) {
     }
 }
 
-// ==================== Drag & Drop Functions ====================
+// ==================== Drag & Drop ====================
 function setupDragAndDrop() {
     const dragDropArea = document.getElementById('dragDropArea');
     if (!dragDropArea) return;
@@ -173,24 +171,14 @@ function setupDragAndDrop() {
     }
     
     ['dragenter', 'dragover'].forEach(eventName => {
-        dragDropArea.addEventListener(eventName, highlight, false);
+        dragDropArea.addEventListener(eventName, () => dragDropArea.classList.add('drag-over'), false);
     });
     
     ['dragleave', 'drop'].forEach(eventName => {
-        dragDropArea.addEventListener(eventName, unhighlight, false);
+        dragDropArea.addEventListener(eventName, () => dragDropArea.classList.remove('drag-over'), false);
     });
     
-    function highlight(e) {
-        dragDropArea.classList.add('drag-over');
-    }
-    
-    function unhighlight(e) {
-        dragDropArea.classList.remove('drag-over');
-    }
-    
-    dragDropArea.addEventListener('drop', handleDrop, false);
-    
-    function handleDrop(e) {
+    dragDropArea.addEventListener('drop', (e) => {
         const dt = e.dataTransfer;
         const files = dt.files;
         if (files.length > 0) {
@@ -202,7 +190,7 @@ function setupDragAndDrop() {
                 showToast('الرجاء رفع ملف صورة أو فيديو فقط');
             }
         }
-    }
+    }, false);
 }
 
 function handleFileSelect(input, type) {
@@ -222,17 +210,12 @@ function handleFile(file, type) {
     const previewFileSize = document.getElementById('previewFileSize');
     const dragDropArea = document.getElementById('dragDropArea');
     
-    // Hide drag drop area
     dragDropArea.style.display = 'none';
-    
-    // Show preview
     previewDiv.classList.add('active');
     
-    // Set file info
     previewFileName.textContent = file.name;
     previewFileSize.textContent = formatFileSize(file.size);
     
-    // Show preview based on type
     const reader = new FileReader();
     reader.onload = function(e) {
         if (type === 'image') {
@@ -244,7 +227,6 @@ function handleFile(file, type) {
             previewVideo.style.display = 'block';
             previewVideo.src = e.target.result;
             
-            // Get video duration
             previewVideo.onloadedmetadata = function() {
                 const duration = previewVideo.duration;
                 const minutes = Math.floor(duration / 60);
@@ -283,7 +265,7 @@ function showSkeletonLoader() {
     let skeletonHtml = '';
     for (let i = 0; i < 3; i++) {
         skeletonHtml += `
-            <div class="skeleton-post fade-in-up">
+            <div class="skeleton-post">
                 <div class="skeleton-header">
                     <div class="skeleton skeleton-avatar"></div>
                     <div style="flex: 1;">
@@ -300,22 +282,7 @@ function showSkeletonLoader() {
     feedContainer.innerHTML = skeletonHtml;
 }
 
-// ==================== Scroll Animation Observer ====================
-function setupScrollAnimations() {
-    const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                entry.target.classList.add('fade-in-up');
-                observer.unobserve(entry.target);
-            }
-        });
-    }, { threshold: 0.1 });
-    
-    const elements = document.querySelectorAll('.post-card, .trending-item, .follower-item');
-    elements.forEach(el => observer.observe(el));
-}
-
-// ==================== Bad Words Management (Admin Only) ====================
+// ==================== Bad Words Management ====================
 async function loadBadWordsList() {
     const snapshot = await db.ref('badWords').once('value');
     const words = snapshot.val();
@@ -915,7 +882,7 @@ async function isBlocked(userId) {
     return snapshot.exists();
 }
 
-// ==================== Create Post with Progress ====================
+// ==================== Create Post ====================
 async function createPost() {
     const publishBtn = document.getElementById('publishPostBtn');
     if (publishBtn) {
@@ -1121,7 +1088,9 @@ async function loadTrendingHashtags() {
     }
 }
 
-// ==================== Infinite Scroll - Core Functions ====================
+// ==================== Infinite Scroll - محسن وسلس جداً ====================
+
+// تحميل كل المنشورات إلى الكاش (مرة واحدة فقط)
 async function loadAllPostsToCache() {
     const feedContainer = document.getElementById('feedContainer');
     if (!feedContainer) return;
@@ -1159,20 +1128,18 @@ async function loadAllPostsToCache() {
     }
     
     allPostsCache = postsArray;
-    hasMorePosts = allPostsCache.length > POSTS_PER_PAGE;
-    currentDisplayCount = POSTS_PER_PAGE;
+    hasMorePosts = allPostsCache.length > POSTS_PER_BATCH;
+    currentDisplayCount = POSTS_PER_BATCH;
     
     feedContainer.innerHTML = '';
-    await displayPosts(0, POSTS_PER_PAGE);
+    await displayPosts(0, POSTS_PER_BATCH);
     
-    if (!scrollListenerAdded) {
-        setupScrollListener();
-        scrollListenerAdded = true;
+    if (scrollListenerActive) {
+        setupSmoothScrollListener();
     }
-    
-    setupScrollAnimations();
 }
 
+// عرض الدفعة الأولى فقط
 async function displayPosts(startIndex, count) {
     const feedContainer = document.getElementById('feedContainer');
     if (!feedContainer) return;
@@ -1295,6 +1262,7 @@ async function displayPosts(startIndex, count) {
         feedContainer.insertAdjacentHTML('beforeend', postHtml);
     }
     
+    // إضافة مؤشر التحميل عند الحاجة
     if (hasMorePosts && endIndex < allPostsCache.length) {
         let loadMoreDiv = document.getElementById('loadMoreTrigger');
         if (!loadMoreDiv) {
@@ -1315,20 +1283,22 @@ async function displayPosts(startIndex, count) {
     }
 }
 
+// تحميل المزيد من المنشورات - سلس جداً
 async function loadMorePosts() {
-    if (isLoadingPosts || !hasMorePosts) return;
+    if (isLoadingMore || !hasMorePosts) return;
     
-    isLoadingPosts = true;
+    isLoadingMore = true;
     const loadMoreDiv = document.getElementById('loadMoreTrigger');
     if (loadMoreDiv) loadMoreDiv.style.display = 'flex';
     
+    // تأخير بسيط لتجربة سلسة
     await new Promise(resolve => setTimeout(resolve, 200));
     
     const startIndex = currentDisplayCount;
-    const newEndIndex = Math.min(startIndex + POSTS_PER_PAGE, allPostsCache.length);
+    const newEndIndex = Math.min(startIndex + POSTS_PER_BATCH, allPostsCache.length);
     
     if (startIndex < allPostsCache.length) {
-        await displayPosts(startIndex, POSTS_PER_PAGE);
+        await displayPosts(startIndex, POSTS_PER_BATCH);
         currentDisplayCount = newEndIndex;
         hasMorePosts = currentDisplayCount < allPostsCache.length;
     } else {
@@ -1336,16 +1306,16 @@ async function loadMorePosts() {
     }
     
     if (loadMoreDiv) loadMoreDiv.style.display = 'none';
-    isLoadingPosts = false;
-    setupScrollAnimations();
+    isLoadingMore = false;
 }
 
-function setupScrollListener() {
+// مستمع التمرير المحسن - للأداء العالي
+function setupSmoothScrollListener() {
     const handleScroll = () => {
-        if (isLoadingPosts || !hasMorePosts) return;
+        if (isLoadingMore || !hasMorePosts) return;
         
         const scrollPosition = window.innerHeight + window.scrollY;
-        const threshold = document.body.offsetHeight - 400;
+        const threshold = document.body.offsetHeight - 500; // 500px قبل النهاية
         
         if (scrollPosition >= threshold) {
             loadMorePosts();
@@ -1353,9 +1323,10 @@ function setupScrollListener() {
     };
     
     window.removeEventListener('scroll', handleScroll);
-    window.addEventListener('scroll', handleScroll);
+    window.addEventListener('scroll', handleScroll, { passive: true });
 }
 
+// تحديث الكاش بعد إضافة/حذف منشور
 async function refreshFeedCache() {
     if (!currentUser) return;
     
@@ -1392,22 +1363,22 @@ async function refreshFeedCache() {
     }
     
     allPostsCache = postsArray;
-    hasMorePosts = allPostsCache.length > POSTS_PER_PAGE;
-    currentDisplayCount = Math.min(POSTS_PER_PAGE, allPostsCache.length);
+    hasMorePosts = allPostsCache.length > POSTS_PER_BATCH;
+    currentDisplayCount = Math.min(POSTS_PER_BATCH, allPostsCache.length);
     
     const feedContainer = document.getElementById('feedContainer');
     if (feedContainer) {
         feedContainer.innerHTML = '';
         await displayPosts(0, currentDisplayCount);
     }
-    setupScrollAnimations();
 }
 
 function resetInfiniteScroll() {
-    isLoadingPosts = false;
+    isLoadingMore = false;
     hasMorePosts = true;
     allPostsCache = [];
     currentDisplayCount = 0;
+    scrollListenerActive = true;
 }
 
 async function loadFeed() {
@@ -1914,7 +1885,7 @@ function closeFollowers() {
     document.getElementById('followersPanel').classList.remove('open');
 }
 
-// ==================== Stories (placeholder for future) ====================
+// ==================== Stories ====================
 async function openStories() {
     showToast('📸 القصص قريباً في DOKA!');
 }
@@ -1981,13 +1952,6 @@ function goToHome() {
 function switchTab(tab) {
     if (tab === 'home') {
         refreshFeedCache();
-    }
-}
-
-function previewMedia(input, type) {
-    const file = input.files[0];
-    if (file) {
-        handleFile(file, type);
     }
 }
 
