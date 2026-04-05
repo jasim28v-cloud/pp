@@ -17,12 +17,12 @@ let currentImageUrls = [];
 let currentImageIndex = 0;
 
 // ==================== Infinite Scroll Variables (محسنة) ====================
-let allPostsCache = [];           // تخزين مؤقت لكل المنشورات
-let currentDisplayCount = 0;      // عدد المنشورات المعروضة حالياً
-let isLoadingMore = false;         // لمنع التحميل المتكرر
-let hasMorePosts = true;           // هل يوجد المزيد؟
-let scrollListenerActive = true;   // حالة مستمع التمرير
-const POSTS_PER_BATCH = 5;         // 5 منشورات فقط في كل مرة (سلس جداً)
+let allPostsCache = [];
+let currentDisplayCount = 0;
+let isLoadingMore = false;
+let hasMorePosts = true;
+let scrollListenerActive = true;
+const POSTS_PER_BATCH = 5;
 
 // ==================== Upload Progress Variables ====================
 let currentUploadProgress = 0;
@@ -591,106 +591,14 @@ async function startVideoCallWithUser(userId) {
 async function logout() {
     try {
         await auth.signOut();
+        localStorage.removeItem('auth_logged_in');
+        localStorage.removeItem('auth_user_email');
         showToast('👋 تم تسجيل الخروج بنجاح');
-        setTimeout(() => location.reload(), 1000);
+        setTimeout(() => {
+            window.location.href = 'auth.html';
+        }, 1000);
     } catch (error) {
         showToast('❌ حدث خطأ أثناء تسجيل الخروج');
-    }
-}
-
-// ==================== Login & Register ====================
-function switchAuth(form) {
-    document.getElementById('loginForm').classList.remove('active');
-    document.getElementById('registerForm').classList.remove('active');
-    document.getElementById(`${form}Form`).classList.add('active');
-}
-
-async function login() {
-    const email = document.getElementById('loginEmail')?.value;
-    const password = document.getElementById('loginPassword')?.value;
-    const msgDiv = document.getElementById('loginMsg');
-    if (!email || !password) return msgDiv.textContent = 'الرجاء إدخال البريد وكلمة المرور';
-    try {
-        showToast('🔄 جاري تسجيل الدخول...');
-        const userCredential = await auth.signInWithEmailAndPassword(email, password);
-        currentUser = userCredential.user;
-        const snapshot = await db.ref(`users/${currentUser.uid}`).once('value');
-        if (snapshot.exists()) {
-            currentUser = { ...currentUser, ...snapshot.val() };
-        } else {
-            await db.ref(`users/${currentUser.uid}`).set({
-                uid: currentUser.uid, name: currentUser.displayName || email.split('@')[0],
-                email: email, bio: "مرحباً! أنا في DOKA ✨", avatar: "", cover: "",
-                website: "", verified: false, isAdmin: false, blockedUsers: {}, mutedUntil: 0, createdAt: Date.now()
-            });
-        }
-        if (email === ADMIN_EMAIL && password === ADMIN_PASSWORD) {
-            showToast('🌟 مرحباً بك في لوحة التحكم يا مدير DOKA!');
-            await db.ref(`users/${currentUser.uid}`).update({ isAdmin: true, verified: true, name: 'DOKA Admin' });
-            currentUser.isAdmin = true;
-            currentUser.verified = true;
-        }
-        document.getElementById('authScreen').style.display = 'none';
-        document.getElementById('mainApp').style.display = 'block';
-        showToast(`✨ مرحباً ${currentUser.displayName || currentUser.name}!`);
-        
-        resetInfiniteScroll();
-        await loadFeed();
-        loadNotifications();
-        loadTrendingHashtags();
-        loadDndStatus();
-        checkScheduledPosts();
-        await loadBadWordsList();
-        
-        const savedTheme = localStorage.getItem('theme');
-        if (savedTheme === 'dark') document.body.classList.add('dark-mode');
-        const savedReadMode = localStorage.getItem('readMode');
-        if (savedReadMode === 'true') {
-            readModeActive = true;
-            document.getElementById('readModeToggle')?.classList.add('active');
-            document.body.classList.add('read-mode');
-        }
-        const savedHideLikes = localStorage.getItem('hideLikes');
-        if (savedHideLikes === 'true') {
-            hideLikesActive = true;
-            document.getElementById('hideLikesToggle')?.classList.add('active');
-        }
-        await recordProfileView(currentUser.uid);
-    } catch (error) {
-        if (msgDiv) msgDiv.textContent = error.message;
-        showToast(error.message);
-    }
-}
-
-async function register() {
-    const name = document.getElementById('regName')?.value;
-    const email = document.getElementById('regEmail')?.value;
-    const password = document.getElementById('regPass')?.value;
-    const confirmPass = document.getElementById('regConfirmPass')?.value;
-    const msgDiv = document.getElementById('regMsg');
-    if (!name || !email || !password) return msgDiv.textContent = 'الرجاء ملء جميع الحقول';
-    if (password !== confirmPass) return msgDiv.textContent = 'كلمة المرور غير متطابقة';
-    try {
-        showToast('🔄 جاري إنشاء الحساب...');
-        const userCredential = await auth.createUserWithEmailAndPassword(email, password);
-        await userCredential.user.updateProfile({ displayName: name });
-        await db.ref(`users/${userCredential.user.uid}`).set({
-            uid: userCredential.user.uid, name: name, email: email,
-            bio: "مرحباً! أنا في DOKA ✨", avatar: "", cover: "", website: "",
-            verified: false, isAdmin: email === ADMIN_EMAIL, blockedUsers: {}, mutedUntil: 0, createdAt: Date.now()
-        });
-        currentUser = userCredential.user;
-        currentUser.name = name;
-        document.getElementById('authScreen').style.display = 'none';
-        document.getElementById('mainApp').style.display = 'block';
-        
-        resetInfiniteScroll();
-        await loadFeed();
-        loadTrendingHashtags();
-        showToast(`🎉 أهلاً بك ${name} في DOKA!`);
-    } catch (error) {
-        if (msgDiv) msgDiv.textContent = error.message;
-        showToast(error.message);
     }
 }
 
@@ -1090,7 +998,6 @@ async function loadTrendingHashtags() {
 
 // ==================== Infinite Scroll - محسن وسلس جداً ====================
 
-// تحميل كل المنشورات إلى الكاش (مرة واحدة فقط)
 async function loadAllPostsToCache() {
     const feedContainer = document.getElementById('feedContainer');
     if (!feedContainer) return;
@@ -1139,7 +1046,6 @@ async function loadAllPostsToCache() {
     }
 }
 
-// عرض الدفعة الأولى فقط
 async function displayPosts(startIndex, count) {
     const feedContainer = document.getElementById('feedContainer');
     if (!feedContainer) return;
@@ -1262,7 +1168,6 @@ async function displayPosts(startIndex, count) {
         feedContainer.insertAdjacentHTML('beforeend', postHtml);
     }
     
-    // إضافة مؤشر التحميل عند الحاجة
     if (hasMorePosts && endIndex < allPostsCache.length) {
         let loadMoreDiv = document.getElementById('loadMoreTrigger');
         if (!loadMoreDiv) {
@@ -1283,7 +1188,6 @@ async function displayPosts(startIndex, count) {
     }
 }
 
-// تحميل المزيد من المنشورات - سلس جداً
 async function loadMorePosts() {
     if (isLoadingMore || !hasMorePosts) return;
     
@@ -1291,7 +1195,6 @@ async function loadMorePosts() {
     const loadMoreDiv = document.getElementById('loadMoreTrigger');
     if (loadMoreDiv) loadMoreDiv.style.display = 'flex';
     
-    // تأخير بسيط لتجربة سلسة
     await new Promise(resolve => setTimeout(resolve, 200));
     
     const startIndex = currentDisplayCount;
@@ -1309,13 +1212,12 @@ async function loadMorePosts() {
     isLoadingMore = false;
 }
 
-// مستمع التمرير المحسن - للأداء العالي
 function setupSmoothScrollListener() {
     const handleScroll = () => {
         if (isLoadingMore || !hasMorePosts) return;
         
         const scrollPosition = window.innerHeight + window.scrollY;
-        const threshold = document.body.offsetHeight - 500; // 500px قبل النهاية
+        const threshold = document.body.offsetHeight - 500;
         
         if (scrollPosition >= threshold) {
             loadMorePosts();
@@ -1326,7 +1228,6 @@ function setupSmoothScrollListener() {
     window.addEventListener('scroll', handleScroll, { passive: true });
 }
 
-// تحديث الكاش بعد إضافة/حذف منشور
 async function refreshFeedCache() {
     if (!currentUser) return;
     
@@ -1960,7 +1861,7 @@ setInterval(async () => {
     if (currentUser) await db.ref(`users/${currentUser.uid}/lastSeen`).set(Date.now());
 }, 60000);
 
-// ==================== Auth State Listener ====================
+// ==================== Auth State Listener (معدل - بدون دوال المصادقة) ====================
 const initLoader = document.getElementById('initLoader');
 
 auth.onAuthStateChanged(async (user) => {
@@ -1987,7 +1888,7 @@ auth.onAuthStateChanged(async (user) => {
             });
             currentUser.isAdmin = user.email === ADMIN_EMAIL;
         }
-        document.getElementById('authScreen').style.display = 'none';
+        
         document.getElementById('mainApp').style.display = 'block';
         
         const savedTheme = localStorage.getItem('theme');
@@ -2011,8 +1912,9 @@ auth.onAuthStateChanged(async (user) => {
         loadTrendingHashtags();
         loadDndStatus();
         checkScheduledPosts();
+        
     } else {
-        document.getElementById('authScreen').style.display = 'flex';
-        document.getElementById('mainApp').style.display = 'none';
+        // المستخدم غير مسجل الدخول - التوجيه إلى صفحة التسجيل
+        window.location.href = 'auth.html';
     }
 });
